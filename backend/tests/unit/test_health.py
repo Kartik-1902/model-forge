@@ -1,0 +1,17 @@
+import pytest
+from httpx import AsyncClient
+
+@pytest.mark.asyncio
+async def test_health_endpoint(client: AsyncClient):
+    response = await client.get("/health")
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}
+
+@pytest.mark.asyncio
+async def test_version_endpoint(client: AsyncClient):
+    response = await client.get("/version")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["app"] == "Model Forge"
+    assert data["version"] == "0.1.0"
+    assert data["environment"] in ["development", "testing", "production"]

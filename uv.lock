@@ -1630,7 +1630,7 @@ dependencies = [
     { name = "uvicorn", extra = ["standard"] },
 ]
 
-[package.optional-dependencies]
+[package.dev-dependencies]
 dev = [
     { name = "httpx" },
     { name = "mypy" },
@@ -1647,23 +1647,26 @@ requires-dist = [
     { name = "celery", extras = ["redis"] },
     { name = "fastapi" },
     { name = "httpx" },
-    { name = "httpx", marker = "extra == 'dev'" },
     { name = "mlflow" },
-    { name = "mypy", marker = "extra == 'dev'" },
     { name = "prometheus-client" },
     { name = "pydantic" },
     { name = "pydantic-settings" },
-    { name = "pytest", marker = "extra == 'dev'" },
-    { name = "pytest-asyncio", marker = "extra == 'dev'" },
-    { name = "pytest-cov", marker = "extra == 'dev'" },
     { name = "python-multipart" },
     { name = "redis" },
-    { name = "ruff", marker = "extra == 'dev'" },
     { name = "scikit-learn" },
     { name = "sqlalchemy" },
     { name = "uvicorn", extras = ["standard"] },
 ]
-provides-extras = ["dev"]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "httpx" },
+    { name = "mypy" },
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+    { name = "pytest-cov" },
+    { name = "ruff" },
+]
 
 [[package]]
 name = "multidict"
