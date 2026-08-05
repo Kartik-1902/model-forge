@@ -27,6 +27,14 @@ def create_app() -> FastAPI:
         lifespan=lifespan
     )
 
+    from app.api.routes.admin import router as admin_router
+    from app.api.routes.tasks import router as tasks_router
+    from app.auth.dependencies import verify_api_key, verify_admin_key
+    from fastapi import Depends
+
+    app.include_router(admin_router, dependencies=[Depends(verify_admin_key)])
+    app.include_router(tasks_router, dependencies=[Depends(verify_api_key)])
+
     @app.get("/health")
     def health():
         return {"status": "ok"}

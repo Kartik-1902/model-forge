@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     mlflow_tracking_uri: str = 'http://localhost:5001'
 
     api_key_header: str = 'X-API-Key'
+    bootstrap_admin_key: str | None = None
 
 @lru_cache
 def get_settings() -> Settings:

@@ -8,27 +8,23 @@ dependencies = [
     "fastapi",
     "uvicorn[standard]",
     "python-multipart",
-
     "pydantic",
     "pydantic-settings",
-
     "mlflow",
     "scikit-learn",
-
     "sqlalchemy",
     "alembic",
     "asyncpg",
-
     "celery[redis]",
     "redis",
-
     "prometheus-client",
-
     "httpx",
+    "pandas>=2.3.3",
 ]
 
 [dependency-groups]
 dev = [
+    "aiosqlite>=0.22.1",
     "httpx",
     "mypy",
     "pytest",
