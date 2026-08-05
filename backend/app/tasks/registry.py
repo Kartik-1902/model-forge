@@ -158,18 +158,12 @@ class TaskRegistry:
         """Return the first concrete subclass of *base* found in *module*,
         or ``None``."""
         for _name, obj in inspect.getmembers(module, inspect.isclass):
-            if (
-                issubclass(obj, base)
-                and obj is not base
-                and not inspect.isabstract(obj)
-            ):
+            if issubclass(obj, base) and obj is not base and not inspect.isabstract(obj):
                 return obj
         return None
 
     @staticmethod
-    def _resolve_model_name(
-        model_cls: type[ModelImplementation], task_name: str
-    ) -> str:
+    def _resolve_model_name(model_cls: type[ModelImplementation], task_name: str) -> str:
         """Instantiate the model temporarily to read ``model_name``.
 
         This is the only reliable way to get the name because it is an
@@ -184,7 +178,7 @@ class TaskRegistry:
         # For simplicity (and because model_name should not depend on the
         # task), we peek at the class attribute directly if it exists.
         if hasattr(model_cls, "_model_name"):
-            return model_cls._model_name  # type: ignore[return-value]
+            return str(getattr(model_cls, "_model_name"))
 
         # Fallback: derive from the class name
         # e.g. RandomForestModel → random_forest_model
@@ -210,13 +204,10 @@ class TaskRegistry:
             return self._tasks[task_name]
         except KeyError:
             raise KeyError(
-                f"Task '{task_name}' is not registered. "
-                f"Available tasks: {list(self._tasks)}"
+                f"Task '{task_name}' is not registered. Available tasks: {list(self._tasks)}"
             ) from None
 
-    def get_model(
-        self, task_name: str, model_name: str
-    ) -> type[ModelImplementation]:
+    def get_model(self, task_name: str, model_name: str) -> type[ModelImplementation]:
         """Return the ModelImplementation *class* for *task_name*/*model_name*.
 
         Raises ``KeyError`` if the task or model is not registered.
@@ -242,7 +233,7 @@ class TaskRegistry:
         self.get_task(task_name)  # validate
         return list(self._models[task_name])
 
-    def get_task_info(self, task_name: str) -> dict:
+    def get_task_info(self, task_name: str) -> dict[str, Any]:
         """Return a JSON-serialisable dict of task metadata.
 
         Includes name, input/output schema (JSON Schema), evaluation
@@ -272,9 +263,7 @@ def get_registry() -> TaskRegistry:
     Raises ``RuntimeError`` if ``init_registry()`` has not been called.
     """
     if _global_registry is None:
-        raise RuntimeError(
-            "TaskRegistry not initialised. Call init_registry() first."
-        )
+        raise RuntimeError("TaskRegistry not initialised. Call init_registry() first.")
     return _global_registry
 
 

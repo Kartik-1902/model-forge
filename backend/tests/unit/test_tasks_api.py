@@ -1,7 +1,6 @@
 import pytest
-# pyrefly: ignore [missing-import]
-from app.tasks.registry import init_registry
 
+# pyrefly: ignore [missing-import]
 
 
 @pytest.mark.asyncio
@@ -13,6 +12,7 @@ async def test_list_tasks(client):
     tasks = data["tasks"]
     assert any(t["task_name"] == "tabular_classification" for t in tasks)
 
+
 @pytest.mark.asyncio
 async def test_get_task(client):
     resp = await client.get("/api/v1/tasks/tabular_classification")
@@ -23,10 +23,12 @@ async def test_get_task(client):
     assert "output_schema" in data
     assert "evaluation_metrics" in data
 
+
 @pytest.mark.asyncio
 async def test_get_task_not_found(client):
     resp = await client.get("/api/v1/tasks/nonexistent")
     assert resp.status_code == 404
+
 
 @pytest.mark.asyncio
 async def test_list_task_models(client):
@@ -35,6 +37,7 @@ async def test_list_task_models(client):
     data = resp.json()
     assert "models" in data
     assert "random_forest" in data["models"]
+
 
 @pytest.mark.asyncio
 async def test_list_task_models_not_found(client):

@@ -1,10 +1,7 @@
 from typing import Any
-from app.tasks.base import (
-    ModelImplementation, 
-    TrainingResult, 
-    PredictionResult, 
-    EvaluationResult
-)
+
+from app.tasks.base import EvaluationResult, ModelImplementation, PredictionResult, TrainingResult
+
 
 class DummyModel(ModelImplementation):
     @property
@@ -14,24 +11,20 @@ class DummyModel(ModelImplementation):
     @property
     def framework(self) -> str:
         return "dummy_framework"
-    
+
     def train(self, train_data: Any) -> TrainingResult:
         return TrainingResult(
-            metrics={"accuracy": 1.0},
-            artifact_path="/tmp/dummy",
-            training_duration_seconds=1.0
+            metrics={"accuracy": 1.0}, artifact_path="/tmp/dummy", training_duration_seconds=1.0
         )
-    
+
     def predict(self, input_data: Any) -> PredictionResult:
         return PredictionResult(prediction={"label": "dummy_prediction"})
 
     def evaluate(self, evaluation_data: Any) -> EvaluationResult:
         return EvaluationResult(
-            metrics={"accuracy": 1.0},
-            num_samples=10,
-            evaluation_duration_seconds=0.5
+            metrics={"accuracy": 1.0}, num_samples=10, evaluation_duration_seconds=0.5
         )
-    
+
     def save(self, path: str) -> None:
         pass
 

@@ -1,15 +1,16 @@
 from fastapi import Depends, HTTPException, Security, status
 from fastapi.security import APIKeyHeader
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.auth.keys import KeyStore
 from app.config import get_settings
 from app.dependencies import get_db_session
 
 api_key_header = APIKeyHeader(name=get_settings().api_key_header, auto_error=False)
 
+
 async def verify_api_key(
-    api_key: str | None = Security(api_key_header),
-    db: AsyncSession = Depends(get_db_session)
+    api_key: str | None = Security(api_key_header), db: AsyncSession = Depends(get_db_session)
 ) -> str:
     """
     Dependency to verify API keys for standard endpoints.
@@ -32,9 +33,9 @@ async def verify_api_key(
 
     return key_meta.name
 
+
 async def verify_admin_key(
-    api_key: str | None = Security(api_key_header),
-    db: AsyncSession = Depends(get_db_session)
+    api_key: str | None = Security(api_key_header), db: AsyncSession = Depends(get_db_session)
 ) -> str:
     """
     Dependency to verify admin access.
@@ -42,7 +43,7 @@ async def verify_admin_key(
     otherwise falls back to standard API key verification.
     """
     settings = get_settings()
-    
+
     if not api_key:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

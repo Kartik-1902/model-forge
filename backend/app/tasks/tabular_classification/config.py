@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 
+
 class RandomForestParams(BaseModel):
     n_estimators: int = Field(default=100, ge=1, le=1000)
     max_depth: int | None = Field(default=None, ge=1, le=100)

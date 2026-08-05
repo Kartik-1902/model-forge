@@ -1,12 +1,16 @@
 from pydantic import BaseModel
+
 from app.tasks.base import TaskDefinition
+
 
 class TabularInput(BaseModel):
     features: dict[str, float | int | str]
 
+
 class TabularOutput(BaseModel):
     predicted_class: str
     probabilities: dict[str, float]
+
 
 class TabularClassificationTask(TaskDefinition):
     @property

@@ -41,6 +41,9 @@ build-backend = "hatchling.build"
 line-length = 100
 target-version = "py312"
 
+[tool.ruff.lint]
+ignore = ["B008"]  # Allow Depends() in default arguments for FastAPI
+
 [tool.pytest.ini_options]
 testpaths = ["backend/tests"]
 asyncio_mode = "auto"
@@ -48,5 +51,14 @@ asyncio_mode = "auto"
 [tool.mypy]
 python_version = "3.12"
 strict = true
+
+[[tool.mypy.overrides]]
+module = [
+    "pandas.*",
+    "sklearn.*",
+    "joblib.*"
+]
+ignore_missing_imports = true
+
 [tool.uv]
 package = false

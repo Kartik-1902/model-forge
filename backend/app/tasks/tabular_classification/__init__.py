@@ -1,1 +1,3 @@
-from app.tasks.tabular_classification.task import TabularClassificationTask
+from app.tasks.tabular_classification.task import (
+    TabularClassificationTask as TabularClassificationTask,
+)

@@ -1,13 +1,19 @@
-from pydantic import BaseModel, Field
 from datetime import datetime
 
+from pydantic import BaseModel, Field
+
+
 class CreateKeyRequest(BaseModel):
-    name: str = Field(..., min_length=1, max_length=100, description="Human-readable label for this API key")
+    name: str = Field(
+        ..., min_length=1, max_length=100, description="Human-readable label for this API key"
+    )
+
 
 class APIKeyResponse(BaseModel):
     name: str
     key: str
     created_at: datetime
+
 
 class APIKeyInfo(BaseModel):
     name: str

@@ -1,37 +1,40 @@
 from abc import ABC, abstractmethod
-from typing import Any
 from dataclasses import dataclass, field
-from datetime import datetime
+from typing import Any
 
 from pydantic import BaseModel
 
+
 @dataclass
-class TrainingResult():
-    metrics: dict[ str, float]
-    artifact_path: str 
+class TrainingResult:
+    metrics: dict[str, float]
+    artifact_path: str
     training_duration_seconds: float
     additional_info: dict[str, Any] = field(default_factory=dict)
 
-@dataclass
-class PredictionResult():
-    prediction: Any 
-    confidence: float | None = None
-    metadata: dict [ str , Any] = field(default_factory=dict)
 
 @dataclass
-class EvaluationResult():
-    metrics: dict[str, float]          # {'accuracy': 0.94, 'f1': 0.91, ...}
+class PredictionResult:
+    prediction: Any
+    confidence: float | None = None
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
+class EvaluationResult:
+    metrics: dict[str, float]  # {'accuracy': 0.94, 'f1': 0.91, ...}
     num_samples: int
     evaluation_duration_seconds: float
     additional_info: dict[str, Any] = field(default_factory=dict)
 
+
 @dataclass
-class ModelInfo():
+class ModelInfo:
     model_name: str
     task_name: str
     framework: str
-    input_schema: dict [str, Any]    # JSON Schema
-    output_schema: dict [str, Any]   # JSON Schema
+    input_schema: dict[str, Any]  # JSON Schema
+    output_schema: dict[str, Any]  # JSON Schema
     parameter_count: int | None = None
     artifact_size_bytes: int | None = None
     description: str = ""
@@ -45,35 +48,32 @@ class TaskDefinition(ABC):
     @abstractmethod
     def task_name(self) -> str:
         """Canonical name: 'image_classification', 'text_classification', etc."""
-        pass
 
     @property
     @abstractmethod
     def input_schema(self) -> type[BaseModel]:
         """Pydantic model describing the expected prediction input."""
-        pass
 
     @property
     @abstractmethod
     def output_schema(self) -> type[BaseModel]:
         """Pydantic model describing the prediction output."""
-        pass
 
     @property
     @abstractmethod
     def evaluation_metrics(self) -> list[str]:
         """Metrics this task reports: ['accuracy', 'precision', 'recall', 'f1']"""
-        pass
 
     @abstractmethod
     def get_default_thresholds(self) -> dict[str, float]:
         """Minimum metric values for a model to pass evaluation.
         Example: {'accuracy': 0.7, 'f1': 0.65}
         Can be overridden per training request."""
-        pass
+
 
 from abc import ABC, abstractmethod
 from typing import Any
+
 
 class ModelImplementation(ABC):
     """
@@ -94,7 +94,6 @@ class ModelImplementation(ABC):
     @abstractmethod
     def model_name(self) -> str:
         """Canonical model name (e.g. 'ResNet50', 'XGBoost')."""
-        pass
 
     @property
     def task(self) -> TaskDefinition:
@@ -109,7 +108,6 @@ class ModelImplementation(ABC):
     @abstractmethod
     def framework(self) -> str:
         """Framework used by this model (PyTorch, TensorFlow, sklearn, etc.)."""
-        pass
 
     # ------------------------------------------------------------------
     # Core lifecycle
@@ -118,28 +116,23 @@ class ModelImplementation(ABC):
     @abstractmethod
     def train(self, train_data: Any) -> TrainingResult:
         """Train the model."""
-        pass
 
     @abstractmethod
     def predict(self, input_data: Any) -> PredictionResult:
         """Run inference."""
-        pass
 
     @abstractmethod
     def evaluate(self, evaluation_data: Any) -> EvaluationResult:
         """Evaluate the model."""
-        pass
 
     @abstractmethod
     def save(self, path: str) -> None:
         """Persist the trained model."""
-        pass
 
     @classmethod
     @abstractmethod
     def load(cls, path: str) -> "ModelImplementation":
         """Load a previously saved model."""
-        pass
 
     # ------------------------------------------------------------------
     # Information

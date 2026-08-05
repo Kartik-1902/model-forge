@@ -1,8 +1,12 @@
 import hashlib
 import secrets
-from sqlalchemy.ext.asyncio import AsyncSession
+from datetime import UTC
+
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.db.models import APIKey
+
 
 class KeyStore:
     def __init__(self, session: AsyncSession):
@@ -13,12 +17,7 @@ class KeyStore:
         key_hash = self._hash_key(raw_key)
         key_prefix = raw_key[:11]
 
-        api_key = APIKey(
-            name=name,
-            key_prefix=key_prefix,
-            key_hash=key_hash,
-            is_active=True
-        )
+        api_key = APIKey(name=name, key_prefix=key_prefix, key_hash=key_hash, is_active=True)
         self.session.add(api_key)
         await self.session.commit()
         await self.session.refresh(api_key)
@@ -29,10 +28,11 @@ class KeyStore:
         stmt = select(APIKey).where(APIKey.key_hash == key_hash, APIKey.is_active == True)
         result = await self.session.execute(stmt)
         api_key = result.scalar_one_or_none()
-        
+
         if api_key:
-            from datetime import datetime, timezone
-            api_key.last_used_at = datetime.now(timezone.utc)
+            from datetime import datetime
+
+            api_key.last_used_at = datetime.now(UTC)
             await self.session.commit()
             await self.session.refresh(api_key)
             return api_key

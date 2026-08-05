@@ -1,9 +1,10 @@
-import sys
 import os
+import sys
 
 # Add 'backend' to the Python path so imports work correctly from the root
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'backend')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "backend")))
 
+# pyrefly: ignore [missing-import]
 from app.tasks.registry import init_registry
 
 print("=== 1. Initializing Registry & Discovery ===")
@@ -26,13 +27,11 @@ rf_model = rf_model_cls(task=tabular_task)
 print(f"Model instantiated successfully: {rf_model.model_name}")
 
 print("\n=== 4. Training on Sample Data ===")
-csv_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'backend', 'tests', 'fixtures', 'iris_sample.csv'))
+csv_path = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "backend", "tests", "fixtures", "iris_sample.csv")
+)
 
-train_data = {
-    "data_path": csv_path,
-    "target_column": "species",
-    "params": {"n_estimators": 5}
-}
+train_data = {"data_path": csv_path, "target_column": "species", "params": {"n_estimators": 5}}
 
 result = rf_model.train(train_data)
 print(f"Training completed in {result.training_duration_seconds:.4f}s")
@@ -40,12 +39,7 @@ print(f"Training Metrics: {result.metrics}")
 
 print("\n=== 5. Making a Prediction ===")
 input_data = {
-    "features": {
-        "sepal_length": 5.1,
-        "sepal_width": 3.5,
-        "petal_length": 1.4,
-        "petal_width": 0.2
-    }
+    "features": {"sepal_length": 5.1, "sepal_width": 3.5, "petal_length": 1.4, "petal_width": 0.2}
 }
 prediction = rf_model.predict(input_data)
 print(f"Prediction: {prediction.prediction}")
